@@ -30,6 +30,21 @@ app.get("/dinosaurs", (req, res) =>{
     let dinos = fs.readFileSync("./dinosaurs.json")
     // take our data and put it in a more readable format
     dinos = JSON.parse(dinos)
+    console.log(req.query.nameFilter)
+    let nameToFilterBy = req.query.nameFilter
+    //array methof filter
+    //if somebody didn't want to filter and submit
+    //this will be undefines and we will return all dinos
+    if (nameToFilterBy) {
+        const newFilteredArray = dinos.filter((dinosaurObj)=> {
+            if (dinosaurObj.name.toLowerCase() === nameToFilterBy){
+                return true
+            }
+        })
+        dinos = newFilteredArray
+        console.log(newFilteredArray)
+    }
+    
     //in our views folder render this page and give us a vriable to work with
     res.render("dinosaurs/index", {dinos: dinos})
 })
