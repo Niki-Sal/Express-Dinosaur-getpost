@@ -1,7 +1,9 @@
 const express = require("express")
 const app = express()
 const expressLayouts = require("express-ejs-layouts")
+//filesystem module
 const fs = require ("fs")
+const methodOverride = require("method-override")
 
 /////Not neccessary
 const bodyParser = require('body-parser')
@@ -11,11 +13,14 @@ const ejs = require("ejs")
 //MiddleWare
 //this will help us use our layout file
 app.use(expressLayouts)
+//this will help us use our method override
+app.use(methodOverride("_method"))
 
 ///// these two necessary instead of above ejs and bodyparser
 app.use(express.urlencoded({extended: false}));
 // for views use .ejs files
 app.set("view engine", "ejs")
+
 
 
 
@@ -91,6 +96,20 @@ app.post("/dinosaurs", (req, res)=>{
     res.redirect("/dinosaurs")
    
 })
+
+
+app.delete('/dinosaurs/:idx', (req, res) => {
+    const dinosaurs = fs.readFileSync('./dinosaurs.json');
+    const dinosaursArray = JSON.parse(dinosaurs);
+    // intermediate variable
+    let idx = Number(req.params.idx); // what is this datatype? comes in as a string, change to integer
+    // remove the dinosaur
+    dinosaursArray.splice(idx, 1);
+    // save the dinosaurs array into the dinosaurs.json file
+    fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinosaursArray));
+    // redirect back to /dinosaurs route
+    res.redirect('/dinosaurs');
+});
 
 
 const PORT = process.env.PORT || 8000
