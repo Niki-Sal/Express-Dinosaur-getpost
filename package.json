@@ -1,0 +1,23 @@
+{
+  "name": "express-get-post",
+  "version": "1.0.0",
+  "description": "git and post routes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Niki-Sal/express-get-post.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Niki-Sal/express-get-post/issues"
+  },
+  "homepage": "https://github.com/Niki-Sal/express-get-post#readme",
+  "dependencies": {
+    "express-ejs-layouts": "^2.5.0"
+  }
+}
