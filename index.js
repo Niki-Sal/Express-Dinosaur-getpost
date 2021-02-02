@@ -2,15 +2,22 @@ const express = require("express")
 const app = express()
 const expressLayouts = require("express-ejs-layouts")
 const fs = require ("fs")
-const ejs = require("ejs")
-const bodyParser = require('body-parser')
 
-//MissleWare
+/////Not neccessary
+const bodyParser = require('body-parser')
+const ejs = require("ejs")
+
+
+//MiddleWare
 //this will help us use our layout file
 app.use(expressLayouts)
+
+///// these two necessary instead of above ejs and bodyparser
 app.use(express.urlencoded({extended: false}));
 // for views use .ejs files
 app.set("view engine", "ejs")
+
+
 
 // ROUTES
 app.get("/", (req, res) =>{
@@ -23,7 +30,6 @@ app.get("/dinosaurs", (req, res) =>{
     let dinos = fs.readFileSync("./dinosaurs.json")
     // take our data and put it in a more readable format
     dinos = JSON.parse(dinos)
-    console.log(dinos)
     //in our views folder render this page and give us a vriable to work with
     res.render("dinosaurs/index", {dinos: dinos})
 })
@@ -52,9 +58,23 @@ app.get("/dinosaurs/:index", (req, res) =>{
 
 //POST route, doesn't have a view
 app.post("/dinosaurs", (req, res)=>{
-    //this is coming from our form submit
+    //this is coming from our form submit (name= "name" and name= "type")
     //we are going to look at the req.body
-    console.log(req.body)
+    // console.log(req.body)
+    // get data
+    let dinos = fs.readFileSync("./dinosaurs.json")
+    // take our data and put it in a more readable format
+    dinos = JSON.parse(dinos)
+    //construct  a new dino with our req.body values
+    const newDino = {
+        name: req.body.name,
+        type: req.body.type
+    }
+    dinos.push(newDino)
+    fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinos))
+    // get a request to /dinosaurs
+    res.redirect("/dinosaurs")
+   
 })
 
 
