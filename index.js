@@ -61,6 +61,15 @@ app.get("/dinosaurs/new", (req,res)=>{
     res.render("dinosaurs/new")
 })
 
+app.get("/dinosaurs/edit/:idx", (req, res)=>{
+    const dinosaurs = fs.readFileSync ("./dinosaurs.json")
+    const dinosaursArray = JSON.parse(dinosaurs)
+
+    let idx = Number(req.params.idx)
+    const ourDino = dinosaursArray[idx]
+
+    res.render("dinosaurs/edit",{dino: ourDino, idx: idx})
+})
 
 //SHOW view
 app.get("/dinosaurs/:index", (req, res) =>{
@@ -97,7 +106,7 @@ app.post("/dinosaurs", (req, res)=>{
    
 })
 
-
+//delete route
 app.delete('/dinosaurs/:idx', (req, res) => {
     const dinosaurs = fs.readFileSync('./dinosaurs.json');
     const dinosaursArray = JSON.parse(dinosaurs);
@@ -110,6 +119,25 @@ app.delete('/dinosaurs/:idx', (req, res) => {
     // redirect back to /dinosaurs route
     res.redirect('/dinosaurs');
 });
+
+//put route (update)
+
+app.put("/dinosaurs/:idx", (req, res)=>{
+    //the goal of this route is to update a dinasaur
+    const dinosaurs = fs.readFileSync("./dinosaurs.json")
+    const dinosaursArray = JSON.parse(dinosaurs)
+    // set up the index
+    let idx = Number(req.params.idx)
+    const ourDino = dinosaursArray[idx] //what datatype is this? Object
+    //update the dino
+    ourDino.name = req.body.name
+    ourDino.type = req.body.type
+    //rewrite file dinosaur.json
+    fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinosaursArray));
+    //redirect them back to another page (/dinosaurs)
+    res.redirect('/dinosaurs');
+
+})
 
 
 const PORT = process.env.PORT || 8000
